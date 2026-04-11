@@ -1,9 +1,0 @@
-package com.ercoding.proteintracker
-
-class Greeting {
-    private val platform = getPlatform()
-
-    fun greet(): String {
-        return "Hello, ${platform.name}!"
-    }
-}
