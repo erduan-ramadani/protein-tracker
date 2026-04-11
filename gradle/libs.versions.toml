@@ -6,6 +6,7 @@ android-targetSdk = "36"
 androidx-activity = "1.13.0"
 androidx-lifecycle = "2.10.0"
 androidx-datastore = "1.2.1"
+androidx-navigation = "2.9.7"
 
 composeMultiplatform = "1.10.3"
 
@@ -14,7 +15,7 @@ kotlin = "2.3.20"
 material3 = "1.10.0-alpha05"
 
 # Third-Party
-koin = "4.1.0"
+koin = "4.2.1"
 
 [libraries]
 # Android
@@ -40,9 +41,11 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 # Datastore
 androidx-datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }
 
+# Navigation
+androidx-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
+
 # Koin
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
 koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
