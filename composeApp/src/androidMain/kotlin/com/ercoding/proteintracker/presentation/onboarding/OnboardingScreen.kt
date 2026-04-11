@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.sp
 fun OnboardingScreen() {
     MaterialTheme {
 
-        var targetProtein by remember { mutableStateOf("") }
+        var proteinGoal by remember { mutableStateOf("") }
 
         Column(
             modifier = Modifier
@@ -46,10 +46,10 @@ fun OnboardingScreen() {
             )
             Spacer(modifier = Modifier.padding(8.dp))
             OutlinedTextField(
-                value = targetProtein,
+                value = proteinGoal,
                 onValueChange = {
                     if (it.all(Char::isDigit)) {
-                        targetProtein = it
+                        proteinGoal = it
                     }
                 },
                 colors = OutlinedTextFieldDefaults.colors(
