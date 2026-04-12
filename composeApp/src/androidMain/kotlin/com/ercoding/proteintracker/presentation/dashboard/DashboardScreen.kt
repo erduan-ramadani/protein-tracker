@@ -31,7 +31,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
@@ -74,14 +73,13 @@ fun DashboardScreen() {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.background)
                     .padding(paddingValues)
                     .padding(16.dp, 0.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = "ProteinTracker",
-                    color = Color.Black,
                     style = MaterialTheme.typography.headlineSmall
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
@@ -91,9 +89,9 @@ fun DashboardScreen() {
                     progress = { progress }
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
-                Text(text = "Proteine per Mahlzeit: $mealAmount", color = Color.Black)
+                Text(text = "Proteine per Mahlzeit: $mealAmount")
                 Spacer(modifier = Modifier.padding(8.dp))
-                Text(text = "Tageswert: $dailyReached / $dailyGoal", color = Color.Black)
+                Text(text = "Tageswert: $dailyReached / $dailyGoal")
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
                     value = userTextInput,
