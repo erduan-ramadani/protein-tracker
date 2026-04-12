@@ -2,7 +2,7 @@ package com.ercoding.proteintracker.presentation.onboarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ercoding.proteintracker.data.PreferencesRepository
+import com.ercoding.proteintracker.data.local.PreferencesRepository
 import kotlinx.coroutines.launch
 
 class OnboardingViewModel(

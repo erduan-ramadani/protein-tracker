@@ -3,7 +3,7 @@ package com.ercoding.proteintracker.presentation
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ercoding.proteintracker.data.PreferencesRepository
+import com.ercoding.proteintracker.data.local.PreferencesRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
