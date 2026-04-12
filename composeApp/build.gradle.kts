@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -54,6 +55,7 @@ kotlin {
             implementation(libs.bundles.koin.common)
 
             implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.logging)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
         }
@@ -68,9 +70,16 @@ kotlin {
     }
 }
 
+val localProperties = Properties()
+localProperties.load(rootProject.file("local.properties").inputStream())
+val apiKey = localProperties["API_KEY"] as String
+val baseUrl = localProperties["BASE_URL"] as String
+
 android {
     namespace = "com.ercoding.proteintracker"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    buildFeatures { buildConfig = true }
 
     defaultConfig {
         applicationId = "com.ercoding.proteintracker"
@@ -78,6 +87,9 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+
+        buildConfigField("String", "API_KEY", "\"$apiKey\"")
+        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
     }
     packaging {
         resources {

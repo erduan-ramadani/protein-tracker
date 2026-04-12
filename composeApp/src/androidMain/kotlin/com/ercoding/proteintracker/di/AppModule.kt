@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.ercoding.proteintracker.data.PreferencesRepository
+import com.ercoding.proteintracker.data.local.PreferencesRepository
+import com.ercoding.proteintracker.data.remote.AnthropicRepository
 import com.ercoding.proteintracker.presentation.MainViewModel
+import com.ercoding.proteintracker.presentation.dashboard.DashboardViewModel
 import com.ercoding.proteintracker.presentation.onboarding.OnboardingViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,9 +21,11 @@ val appModule = module {
     single { CoroutineScope(SupervisorJob() + Dispatchers.Default) }
     single { androidContext().dataStore }
     single { PreferencesRepository(get()) }
+    single { AnthropicRepository() }
 }
 
 val viewModelModule = module {
     viewModel { MainViewModel(get()) }
+    viewModel { DashboardViewModel(get(), get()) }
     viewModel { OnboardingViewModel(get()) }
 }
