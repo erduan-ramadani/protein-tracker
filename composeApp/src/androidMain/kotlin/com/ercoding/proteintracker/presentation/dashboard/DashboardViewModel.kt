@@ -22,8 +22,8 @@ class DashboardViewModel(
     var mealAmount by mutableIntStateOf(0)
     var dailyReached by mutableIntStateOf(0)
     var dailyGoal by mutableIntStateOf(0)
-    val progress: Float get() = if (dailyGoal == 0) 0f else dailyReached.toFloat() / dailyGoal
     var proteinEntries = mutableStateListOf<ProteinEntry>()
+    val progress: Float get() = if (dailyGoal == 0) 0f else dailyReached.toFloat() / dailyGoal
 
     private val _events = Channel<String>()
     val events = _events.receiveAsFlow()
@@ -31,6 +31,8 @@ class DashboardViewModel(
     init {
         viewModelScope.launch {
             dailyGoal = prefRepository.proteinGoal.first() ?: 0
+            dailyReached = prefRepository.dailyReached.first() ?: 0
+            proteinEntries.addAll(prefRepository.getProteinEntries())
         }
     }
 
@@ -44,6 +46,9 @@ class DashboardViewModel(
                 mealAmount = proteinAmount
                 dailyReached += mealAmount
                 proteinEntries += ProteinEntry(query, mealAmount)
+
+                prefRepository.setDailyReached(dailyReached)
+                prefRepository.setProteinEntries(proteinEntries)
             }
         }
     }

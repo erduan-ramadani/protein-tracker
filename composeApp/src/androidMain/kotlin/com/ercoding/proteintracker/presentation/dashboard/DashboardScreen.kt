@@ -47,7 +47,6 @@ fun DashboardScreen() {
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusRequester = remember { FocusRequester() }
 
-        val mealAmount = viewModel.mealAmount
         val dailyReached = viewModel.dailyReached
         val dailyGoal = viewModel.dailyGoal
         val progress = viewModel.progress
@@ -89,8 +88,6 @@ fun DashboardScreen() {
                     progress = { progress }
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
-                Text(text = "Proteine per Mahlzeit: $mealAmount")
-                Spacer(modifier = Modifier.padding(8.dp))
                 Text(text = "Tageswert: $dailyReached / $dailyGoal")
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
@@ -106,6 +103,7 @@ fun DashboardScreen() {
                             viewModel.addProteins(userTextInput)
                             focusRequester.freeFocus()
                             keyboardController?.hide()
+                            userTextInput = ""
                         }
                     )
                 )
@@ -114,6 +112,7 @@ fun DashboardScreen() {
                     onClick = {
                         viewModel.addProteins(userTextInput)
                         localFocusManager.clearFocus()
+                        userTextInput = ""
                     },
                     modifier = Modifier.fillMaxWidth(),
                 ) {
