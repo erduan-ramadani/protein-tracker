@@ -2,11 +2,13 @@ package com.ercoding.proteintracker.presentation.dashboard
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ercoding.proteintracker.data.local.PreferencesRepository
 import com.ercoding.proteintracker.data.remote.AnthropicRepository
+import com.ercoding.proteintracker.domain.ProteinEntry
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -21,6 +23,7 @@ class DashboardViewModel(
     var dailyReached by mutableIntStateOf(0)
     var dailyGoal by mutableIntStateOf(0)
     val progress: Float get() = if (dailyGoal == 0) 0f else dailyReached.toFloat() / dailyGoal
+    var proteinEntries = mutableStateListOf<ProteinEntry>()
 
     private val _events = Channel<String>()
     val events = _events.receiveAsFlow()
@@ -40,6 +43,7 @@ class DashboardViewModel(
             result.onSuccess { proteinAmount ->
                 mealAmount = proteinAmount
                 dailyReached += mealAmount
+                proteinEntries += ProteinEntry(query, mealAmount)
             }
         }
     }

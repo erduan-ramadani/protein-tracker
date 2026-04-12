@@ -2,13 +2,18 @@ package com.ercoding.proteintracker.presentation.dashboard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -47,9 +52,12 @@ fun DashboardScreen() {
         val dailyReached = viewModel.dailyReached
         val dailyGoal = viewModel.dailyGoal
         val progress = viewModel.progress
+        val dailyEntries = viewModel.proteinEntries
 
         var userTextInput by remember { mutableStateOf("") }
         val snackbarHostState = remember { SnackbarHostState() }
+
+        val listState = rememberLazyListState()
 
         LaunchedEffect(Unit) {
             viewModel.events.collect { apiResponse ->
@@ -112,6 +120,31 @@ fun DashboardScreen() {
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text("Proteine hinzufügen")
+                }
+                Spacer(modifier = Modifier.padding(8.dp))
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    state = listState,
+                ) {
+                    items(dailyEntries) { entry ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                        ) {
+                            Row(modifier = Modifier.padding(16.dp)) {
+                                Text(
+                                    entry.meal,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Text(
+                                    entry.proteinAmount.toString() + "g",
+                                    style = MaterialTheme.typography.titleMedium,
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
