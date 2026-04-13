@@ -9,6 +9,7 @@ import com.ercoding.proteintracker.data.remote.AnthropicRepository
 import com.ercoding.proteintracker.presentation.MainViewModel
 import com.ercoding.proteintracker.presentation.dashboard.DashboardViewModel
 import com.ercoding.proteintracker.presentation.onboarding.OnboardingViewModel
+import com.ercoding.proteintracker.presentation.settings.SettingsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -28,4 +29,5 @@ val viewModelModule = module {
     viewModel { MainViewModel(get()) }
     viewModel { DashboardViewModel(get(), get()) }
     viewModel { OnboardingViewModel(get()) }
+    viewModel { SettingsViewModel(get()) }
 }

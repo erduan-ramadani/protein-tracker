@@ -29,6 +29,7 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
+            implementation(libs.compose.material.icons)
 
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.datastore)

@@ -4,10 +4,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ercoding.proteintracker.data.local.PreferencesRepository
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class MainViewModel(pref: PreferencesRepository) : ViewModel() {
+class MainViewModel(prefRepo: PreferencesRepository) : ViewModel() {
+
+    val isDarkMode =
+        prefRepo.darkMode.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            false
+        )
 
     val isOnboardingComplete = mutableStateOf(false)
     val isLoading = mutableStateOf(true)
@@ -15,7 +24,7 @@ class MainViewModel(pref: PreferencesRepository) : ViewModel() {
     init {
         viewModelScope.launch {
             isLoading.value = true
-            val proteinGoal = pref.proteinGoal.first()
+            val proteinGoal = prefRepo.proteinGoal.first()
             isOnboardingComplete.value = proteinGoal != null
             isLoading.value = false
         }

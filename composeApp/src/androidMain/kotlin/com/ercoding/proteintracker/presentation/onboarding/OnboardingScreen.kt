@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -54,9 +53,6 @@ fun OnboardingScreen(
                         proteinGoal = it
                     }
                 },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = Color.White
-                ),
                 modifier = Modifier.fillMaxWidth()
             )
             Text(
