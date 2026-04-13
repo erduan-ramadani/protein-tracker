@@ -69,8 +69,13 @@ class DashboardViewModel(
         }
     }
 
-    suspend fun removeProteinEntry(entry: ProteinEntry) {
-        proteinEntries.removeIf { it.id == entry.id }
-        prefRepository.setProteinEntries(proteinEntries)
+    fun removeProteinEntry(entry: ProteinEntry) {
+        viewModelScope.launch {
+            dailyReached -= entry.proteinAmount
+            prefRepository.setDailyReached(dailyReached)
+
+            proteinEntries.removeIf { it.id == entry.id }
+            prefRepository.setProteinEntries(proteinEntries)
+        }
     }
 }

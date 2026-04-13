@@ -1,47 +1,28 @@
 package com.ercoding.proteintracker.presentation.dashboard
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 
@@ -52,16 +33,11 @@ fun DashboardScreen() {
 
         val viewModel: DashboardViewModel = koinViewModel()
 
-        val localFocusManager = LocalFocusManager.current
-        val keyboardController = LocalSoftwareKeyboardController.current
-        val focusRequester = remember { FocusRequester() }
-
         val dailyReached = viewModel.dailyReached
         val dailyGoal = viewModel.dailyGoal
         val progress = viewModel.progress
         val dailyEntries = viewModel.proteinEntries
 
-        var userTextInput by remember { mutableStateOf("") }
         val snackbarHostState = remember { SnackbarHostState() }
 
         val listState = rememberLazyListState()
@@ -110,81 +86,23 @@ fun DashboardScreen() {
                 Spacer(modifier = Modifier.padding(8.dp))
                 Text(text = "Tageswert: $dailyReached / $dailyGoal")
                 Spacer(modifier = Modifier.padding(8.dp))
-                OutlinedTextField(
-                    value = userTextInput,
-                    onValueChange = { userTextInput = it },
-                    label = { Text("Was hast du heute gegessen?") },
-                    singleLine = true,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            viewModel.addProteins(userTextInput)
-                            focusRequester.freeFocus()
-                            keyboardController?.hide()
-                            userTextInput = ""
-                        }
-                    )
-                )
-                Spacer(modifier = Modifier.padding(8.dp))
-                Button(
-                    onClick = {
-                        viewModel.addProteins(userTextInput)
-                        localFocusManager.clearFocus()
-                        userTextInput = ""
+                ProteinInputSection(
+                    onClick = { query ->
+                        viewModel.addProteins(query)
                     },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min),
-                ) {
-                    if (viewModel.isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp),
-                            color = MaterialTheme.colorScheme.onPrimary
-                        )
-                    } else {
-                        Text("Proteine hinzufügen")
-                    }
-                }
+                    isLoading = viewModel.isLoading
+                )
                 Spacer(modifier = Modifier.padding(8.dp))
                 LazyColumn(
                     state = listState,
                 ) {
                     items(dailyEntries, key = { it.id }) { entry ->
-                        val swipeState = rememberSwipeToDismissBoxState()
-                        LaunchedEffect(swipeState.currentValue) {
-                            if (swipeState.currentValue != SwipeToDismissBoxValue.Settled) {
+                        ProteinEntryItem(
+                            entry,
+                            onDismiss = {
                                 viewModel.removeProteinEntry(entry)
                             }
-                        }
-                        SwipeToDismissBox(
-                            state = swipeState,
-                            backgroundContent = {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                )
-                            }
-                        ) {
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(8.dp),
-                            ) {
-                                Row(modifier = Modifier.padding(16.dp)) {
-                                    Text(
-                                        entry.meal,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    Text(
-                                        entry.proteinAmount.toString() + "g",
-                                        style = MaterialTheme.typography.titleMedium,
-                                    )
-                                }
-                            }
-                        }
+                        )
                     }
                 }
             }
