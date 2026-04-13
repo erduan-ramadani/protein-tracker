@@ -2,10 +2,12 @@ package com.ercoding.proteintracker.presentation.dashboard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -127,9 +129,18 @@ fun DashboardScreen() {
                         localFocusManager.clearFocus()
                         userTextInput = ""
                     },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Min),
                 ) {
-                    Text("Proteine hinzufügen")
+                    if (viewModel.isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    } else {
+                        Text("Proteine hinzufügen")
+                    }
                 }
                 Spacer(modifier = Modifier.padding(8.dp))
                 LazyColumn(

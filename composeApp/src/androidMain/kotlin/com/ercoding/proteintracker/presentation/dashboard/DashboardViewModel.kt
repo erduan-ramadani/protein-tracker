@@ -3,6 +3,7 @@ package com.ercoding.proteintracker.presentation.dashboard
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,6 +23,7 @@ class DashboardViewModel(
     var dailyReached by mutableIntStateOf(0)
     var dailyGoal by mutableIntStateOf(0)
     var proteinEntries = mutableStateListOf<ProteinEntry>()
+    var isLoading by mutableStateOf(false)
     val progress: Float get() = if (dailyGoal == 0) 0f else dailyReached.toFloat() / dailyGoal
 
     private val _events = Channel<String>()
@@ -37,6 +39,7 @@ class DashboardViewModel(
 
     fun addProteins(query: String) {
         viewModelScope.launch {
+            isLoading = true
             val result = anthropicRepo.requestProteinAmount(query)
             result.onFailure {
                 _events.send("Unbekannter Fehler")
@@ -48,6 +51,7 @@ class DashboardViewModel(
                 prefRepository.setDailyReached(dailyReached)
                 prefRepository.setProteinEntries(proteinEntries)
             }
+            isLoading = false
         }
     }
 
@@ -55,7 +59,7 @@ class DashboardViewModel(
         viewModelScope.launch {
             dailyReached = 0
             prefRepository.setDailyReached(dailyReached)
-            
+
             proteinEntries.clear()
             prefRepository.setProteinEntries(proteinEntries)
         }
