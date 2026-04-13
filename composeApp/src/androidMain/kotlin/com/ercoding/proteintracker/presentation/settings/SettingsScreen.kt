@@ -38,11 +38,11 @@ fun SettingsScreen(
 
     val viewModel: SettingsViewModel = koinViewModel()
     val isDarkMode by viewModel.isDarkMode.collectAsState(false)
-    val proteinGoal = viewModel.proteinGoal.collectAsState(null).value?.toString() ?: ""
-    var newProteinGoal by remember { mutableStateOf(proteinGoal) }
+    val dailyGoal = viewModel.proteinGoal.collectAsState(null).value?.toString() ?: ""
+    var newDailyGoal by remember { mutableStateOf(dailyGoal) }
 
-    LaunchedEffect(proteinGoal) {
-        if (newProteinGoal.isEmpty()) newProteinGoal = proteinGoal
+    LaunchedEffect(dailyGoal) {
+        if (newDailyGoal.isEmpty()) newDailyGoal = dailyGoal
     }
 
     Scaffold(
@@ -78,23 +78,23 @@ fun SettingsScreen(
                 headlineContent = { Text("Proteinziel") },
                 supportingContent = { Text("Täglicher Eiweißbedarf") },
                 trailingContent = {
-                    Text(text = "$proteinGoal g", style = MaterialTheme.typography.bodyLarge)
+                    Text(text = "$dailyGoal g", style = MaterialTheme.typography.bodyLarge)
                 }
             )
             OutlinedTextField(
-                value = newProteinGoal,
-                placeholder = { Text(proteinGoal) },
-                onValueChange = { newProteinGoal = it },
+                value = newDailyGoal,
+                placeholder = { Text(dailyGoal) },
+                onValueChange = { newDailyGoal = it },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .onFocusChanged { focusState ->
-                        if (focusState.isFocused) newProteinGoal = ""
+                        if (focusState.isFocused) newDailyGoal = ""
                     }
             )
             Button(
                 onClick = {
-                    viewModel.setProteinGoal(newProteinGoal.toInt())
+                    viewModel.setProteinGoal(newDailyGoal.toInt())
                 },
                 modifier = Modifier
                     .fillMaxWidth()

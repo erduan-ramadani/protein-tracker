@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +43,7 @@ fun DashboardScreen(
     val viewModel: DashboardViewModel = koinViewModel()
 
     val dailyReached = viewModel.dailyReached
-    val dailyGoal = viewModel.dailyGoal
+    val dailyGoal = viewModel.dailyGoal.collectAsState()
     val progress = viewModel.progress
     val dailyEntries = viewModel.proteinEntries
 
@@ -105,7 +106,7 @@ fun DashboardScreen(
                 progress = { progress }
             )
             Spacer(modifier = Modifier.padding(8.dp))
-            Text(text = "Tageswert: $dailyReached / $dailyGoal")
+            Text(text = "Tageswert: $dailyReached / ${dailyGoal.value}")
             Spacer(modifier = Modifier.padding(8.dp))
             ProteinInputSection(
                 onClick = { query ->

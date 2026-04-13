@@ -11,8 +11,10 @@ import com.ercoding.proteintracker.data.local.PreferencesRepository
 import com.ercoding.proteintracker.data.remote.AnthropicRepository
 import com.ercoding.proteintracker.domain.ProteinEntry
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -22,17 +24,23 @@ class DashboardViewModel(
 ) : ViewModel() {
 
     var dailyReached by mutableIntStateOf(0)
-    var dailyGoal by mutableIntStateOf(0)
+    val dailyGoal = prefRepository.proteinGoal.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        0
+    )
     var proteinEntries = mutableStateListOf<ProteinEntry>()
     var isLoading by mutableStateOf(false)
-    val progress: Float get() = if (dailyGoal == 0) 0f else dailyReached.toFloat() / dailyGoal
+    val progress: Float
+        get() =
+            if ((dailyGoal.value ?: 0) == 0) 0f
+            else dailyReached.toFloat() / (dailyGoal.value ?: 0)
 
     private val _events = Channel<String>()
     val events = _events.receiveAsFlow()
 
     init {
         viewModelScope.launch {
-            dailyGoal = prefRepository.proteinGoal.first() ?: 0
             dailyReached = prefRepository.dailyReached.first() ?: 0
             proteinEntries.addAll(prefRepository.getProteinEntries())
         }
