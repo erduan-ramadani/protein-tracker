@@ -1,6 +1,7 @@
 package com.ercoding.proteintracker.presentation.dashboard
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -25,7 +26,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,6 +44,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
+
 
 @Composable
 fun DashboardScreen() {
@@ -146,22 +151,38 @@ fun DashboardScreen() {
                 LazyColumn(
                     state = listState,
                 ) {
-                    items(dailyEntries) { entry ->
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp),
+                    items(dailyEntries, key = { it.id }) { entry ->
+                        val swipeState = rememberSwipeToDismissBoxState()
+                        LaunchedEffect(swipeState.currentValue) {
+                            if (swipeState.currentValue != SwipeToDismissBoxValue.Settled) {
+                                viewModel.removeProteinEntry(entry)
+                            }
+                        }
+                        SwipeToDismissBox(
+                            state = swipeState,
+                            backgroundContent = {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                )
+                            }
                         ) {
-                            Row(modifier = Modifier.padding(16.dp)) {
-                                Text(
-                                    entry.meal,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    modifier = Modifier.weight(1f)
-                                )
-                                Text(
-                                    entry.proteinAmount.toString() + "g",
-                                    style = MaterialTheme.typography.titleMedium,
-                                )
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp),
+                            ) {
+                                Row(modifier = Modifier.padding(16.dp)) {
+                                    Text(
+                                        entry.meal,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    Text(
+                                        entry.proteinAmount.toString() + "g",
+                                        style = MaterialTheme.typography.titleMedium,
+                                    )
+                                }
                             }
                         }
                     }

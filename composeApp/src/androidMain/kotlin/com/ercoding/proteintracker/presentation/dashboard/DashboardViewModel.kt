@@ -14,6 +14,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 class DashboardViewModel(
     private val anthropicRepo: AnthropicRepository,
@@ -46,8 +47,11 @@ class DashboardViewModel(
             }
             result.onSuccess { proteinAmount ->
                 dailyReached += proteinAmount
-                proteinEntries += ProteinEntry(query, proteinAmount)
-
+                proteinEntries += ProteinEntry(
+                    UUID.randomUUID().toString(),
+                    query,
+                    proteinAmount
+                )
                 prefRepository.setDailyReached(dailyReached)
                 prefRepository.setProteinEntries(proteinEntries)
             }
@@ -63,5 +67,10 @@ class DashboardViewModel(
             proteinEntries.clear()
             prefRepository.setProteinEntries(proteinEntries)
         }
+    }
+
+    suspend fun removeProteinEntry(entry: ProteinEntry) {
+        proteinEntries.removeIf { it.id == entry.id }
+        prefRepository.setProteinEntries(proteinEntries)
     }
 }
