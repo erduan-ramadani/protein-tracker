@@ -19,7 +19,6 @@ class DashboardViewModel(
     private val prefRepository: PreferencesRepository
 ) : ViewModel() {
 
-    var mealAmount by mutableIntStateOf(0)
     var dailyReached by mutableIntStateOf(0)
     var dailyGoal by mutableIntStateOf(0)
     var proteinEntries = mutableStateListOf<ProteinEntry>()
@@ -43,13 +42,22 @@ class DashboardViewModel(
                 _events.send("Unbekannter Fehler")
             }
             result.onSuccess { proteinAmount ->
-                mealAmount = proteinAmount
-                dailyReached += mealAmount
-                proteinEntries += ProteinEntry(query, mealAmount)
+                dailyReached += proteinAmount
+                proteinEntries += ProteinEntry(query, proteinAmount)
 
                 prefRepository.setDailyReached(dailyReached)
                 prefRepository.setProteinEntries(proteinEntries)
             }
+        }
+    }
+
+    fun reset() {
+        viewModelScope.launch {
+            dailyReached = 0
+            prefRepository.setDailyReached(dailyReached)
+            
+            proteinEntries.clear()
+            prefRepository.setProteinEntries(proteinEntries)
         }
     }
 }
