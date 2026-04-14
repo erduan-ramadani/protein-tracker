@@ -1,5 +1,7 @@
 package com.ercoding.proteintracker.presentation.dashboard
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +23,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.util.UUID
 
+@RequiresApi(Build.VERSION_CODES.O)
 class DashboardViewModel(
     private val anthropicRepo: AnthropicRepository,
     private val prefRepository: PreferencesRepository
@@ -35,12 +38,14 @@ class DashboardViewModel(
     var proteinEntries = mutableStateListOf<ProteinEntry>()
 
     val proteinEntriesByDate: Map<LocalDate, List<ProteinEntry>>
+        @RequiresApi(Build.VERSION_CODES.O)
         get() = proteinEntries.groupBy { entry ->
             Instant.ofEpochMilli(entry.createdAt)
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate()
         }.toSortedMap()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     val last7Days: List<LocalDate> = (0..6).map {
         LocalDate.now().minusDays(it.toLong())
     }.reversed()
@@ -126,6 +131,7 @@ class DashboardViewModel(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getDailyReached(date: LocalDate?): Int {
         return proteinEntriesByDate[date]?.sumOf { it.proteinAmount } ?: 0
     }

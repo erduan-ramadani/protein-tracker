@@ -40,9 +40,9 @@ fun DashboardScreen(
 
     val viewModel: DashboardViewModel = koinViewModel()
     val dailyGoal = viewModel.dailyGoal.collectAsState()
-
     val dailyReached = viewModel.dailyReached
     val progress = viewModel.progress
+
     val dailyEntriesByDate = viewModel.proteinEntriesByDate
     val pagerState = rememberPagerState(
         initialPage = viewModel.last7Days.size - 1,
