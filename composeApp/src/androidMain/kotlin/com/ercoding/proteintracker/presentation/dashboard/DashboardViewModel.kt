@@ -93,13 +93,17 @@ class DashboardViewModel(
                 _events.send(errorMessage)
             }
             result.onSuccess { proteinAmount ->
-                proteinEntries += ProteinEntry(
-                    UUID.randomUUID().toString(),
-                    query,
-                    proteinAmount
-                )
-                prefRepository.setDailyReached(dailyReached)
-                prefRepository.setProteinEntries(proteinEntries)
+                if (proteinAmount == 0) {
+                    _events.send("Proteingehalt nicht gefunden")
+                } else {
+                    proteinEntries += ProteinEntry(
+                        UUID.randomUUID().toString(),
+                        query,
+                        proteinAmount
+                    )
+                    prefRepository.setDailyReached(dailyReached)
+                    prefRepository.setProteinEntries(proteinEntries)
+                }
             }
             isLoading = false
         }
