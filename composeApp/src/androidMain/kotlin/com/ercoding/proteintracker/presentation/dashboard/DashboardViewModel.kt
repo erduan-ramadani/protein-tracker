@@ -65,7 +65,7 @@ class DashboardViewModel(
                     ),
                     ProteinEntry(
                         meal = "Test gestern",
-                        proteinAmount = 30,
+                        proteinAmount = 75,
                         createdAt = System.currentTimeMillis() - 86400000
                     ),
                     ProteinEntry(

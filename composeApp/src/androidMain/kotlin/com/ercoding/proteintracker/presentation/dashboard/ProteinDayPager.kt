@@ -41,7 +41,7 @@ fun ProteinDayPager(
                 else -> dateKey.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
             }
             Spacer(modifier = Modifier.padding(8.dp))
-            Text(text = "Datum: $dateLabel")
+            Text(text = dateLabel)
 
             if (last7Days.isEmpty()) {
                 // leere Ansicht anzeigen
