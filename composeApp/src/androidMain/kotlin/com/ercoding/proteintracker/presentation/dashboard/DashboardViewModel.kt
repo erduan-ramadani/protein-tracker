@@ -9,11 +9,13 @@ import androidx.lifecycle.viewModelScope
 import com.ercoding.proteintracker.data.local.PreferencesRepository
 import com.ercoding.proteintracker.data.remote.AnthropicRepository
 import com.ercoding.proteintracker.domain.ProteinEntry
+import io.ktor.client.plugins.HttpRequestTimeoutException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.net.UnknownHostException
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -82,8 +84,13 @@ class DashboardViewModel(
         viewModelScope.launch {
             isLoading = true
             val result = anthropicRepo.requestProteinAmount(query)
-            result.onFailure {
-                _events.send("Unbekannter Fehler")
+            result.onFailure { exception ->
+                val errorMessage = when (exception) {
+                    is UnknownHostException -> "Kein Internet"
+                    is HttpRequestTimeoutException -> "Timeout"
+                    else -> "Unbekannter Fehler"
+                }
+                _events.send(errorMessage)
             }
             result.onSuccess { proteinAmount ->
                 proteinEntries += ProteinEntry(
