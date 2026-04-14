@@ -18,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.koin.androidx.compose.koinViewModel
@@ -27,49 +26,44 @@ import org.koin.androidx.compose.koinViewModel
 fun OnboardingScreen(
     onConfirmClick: () -> Unit
 ) {
-    MaterialTheme {
+    val viewModel: OnboardingViewModel = koinViewModel()
+    var proteinGoal by remember { mutableStateOf("") }
 
-        val viewModel: OnboardingViewModel = koinViewModel()
-        var proteinGoal by remember { mutableStateOf("") }
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "Täglicher Eiweißbedarf?",
+            fontSize = 16.sp,
+        )
+        Spacer(modifier = Modifier.padding(8.dp))
+        OutlinedTextField(
+            value = proteinGoal,
+            onValueChange = {
+                if (it.all(Char::isDigit)) {
+                    proteinGoal = it
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Text(
+            text = "Empfohlene Menge: 2gr pro KG Körpergewicht",
+            fontSize = 16.sp,
+        )
+        Spacer(modifier = Modifier.padding(8.dp))
+        Button(
+            onClick = {
+                viewModel.setProteinGoal(proteinGoal.toInt())
+                onConfirmClick()
+            },
+            enabled = proteinGoal.isNotBlank()
         ) {
-            Text(
-                text = "Täglicher Eiweißbedarf?",
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.surface
-            )
-            Spacer(modifier = Modifier.padding(8.dp))
-            OutlinedTextField(
-                value = proteinGoal,
-                onValueChange = {
-                    if (it.all(Char::isDigit)) {
-                        proteinGoal = it
-                    }
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Text(
-                text = "Empfohlene Menge: 2gr pro KG Körpergewicht",
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.surface
-            )
-            Spacer(modifier = Modifier.padding(8.dp))
-            Button(
-                onClick = {
-                    viewModel.setProteinGoal(proteinGoal.toInt())
-                    onConfirmClick()
-                },
-                enabled = proteinGoal.isNotBlank()
-            ) {
-                Text("Bestätigen")
-            }
+            Text("Bestätigen")
         }
     }
 }
