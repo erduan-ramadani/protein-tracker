@@ -7,9 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
@@ -45,11 +42,9 @@ fun DashboardScreen(
     val dailyReached = viewModel.dailyReached
     val dailyGoal = viewModel.dailyGoal.collectAsState()
     val progress = viewModel.progress
-    val dailyEntries = viewModel.proteinEntries
+    val dailyEntriesByDate = viewModel.proteinEntriesByDate
 
     val snackbarHostState = remember { SnackbarHostState() }
-
-    val listState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { apiResponse ->
@@ -93,6 +88,7 @@ fun DashboardScreen(
             }
         }
     ) { paddingValues ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -115,18 +111,11 @@ fun DashboardScreen(
                 isLoading = viewModel.isLoading
             )
             Spacer(modifier = Modifier.padding(8.dp))
-            LazyColumn(
-                state = listState,
-            ) {
-                items(dailyEntries, key = { it.id }) { entry ->
-                    ProteinEntryItem(
-                        entry,
-                        onDismiss = {
-                            viewModel.removeProteinEntry(entry)
-                        }
-                    )
-                }
-            }
+            ProteinDayPager(
+                dailyEntriesByDate = dailyEntriesByDate,
+                last7Days = viewModel.last7Days,
+                onDismiss = { entry -> viewModel.removeProteinEntry(entry) }
+            )
         }
     }
 }

@@ -16,6 +16,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.UUID
 
 class DashboardViewModel(
@@ -30,6 +33,18 @@ class DashboardViewModel(
         0
     )
     var proteinEntries = mutableStateListOf<ProteinEntry>()
+
+    val proteinEntriesByDate: Map<LocalDate, List<ProteinEntry>>
+        get() = proteinEntries.groupBy { entry ->
+            Instant.ofEpochMilli(entry.createdAt)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+        }.toSortedMap()
+
+    val last7Days: List<LocalDate> = (0..6).map {
+        LocalDate.now().minusDays(it.toLong())
+    }.reversed()
+    
     var isLoading by mutableStateOf(false)
     val progress: Float
         get() =
@@ -43,6 +58,20 @@ class DashboardViewModel(
         viewModelScope.launch {
             dailyReached = prefRepository.dailyReached.first() ?: 0
             proteinEntries.addAll(prefRepository.getProteinEntries())
+            proteinEntries.addAll(
+                listOf(
+                    ProteinEntry(
+                        meal = "Test gestern",
+                        proteinAmount = 30,
+                        createdAt = System.currentTimeMillis() - 86400000
+                    ),
+                    ProteinEntry(
+                        meal = "Test heute",
+                        proteinAmount = 50,
+                        createdAt = System.currentTimeMillis()
+                    )
+                )
+            )
         }
     }
 

@@ -7,5 +7,6 @@ import java.util.UUID
 data class ProteinEntry(
     val id: String = UUID.randomUUID().toString(),
     val meal: String,
-    val proteinAmount: Int
+    val proteinAmount: Int,
+    val createdAt: Long = System.currentTimeMillis()
 )
