@@ -60,6 +60,9 @@ fun ProteinInputSection(
             localFocusManager.clearFocus()
             userTextInput = ""
         },
+        enabled = userTextInput.isNotBlank()
+                && userTextInput.length >= 3
+                && userTextInput.length < 40,
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min),
