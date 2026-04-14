@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
@@ -38,11 +39,15 @@ fun DashboardScreen(
 ) {
 
     val viewModel: DashboardViewModel = koinViewModel()
+    val dailyGoal = viewModel.dailyGoal.collectAsState()
 
     val dailyReached = viewModel.dailyReached
-    val dailyGoal = viewModel.dailyGoal.collectAsState()
     val progress = viewModel.progress
     val dailyEntriesByDate = viewModel.proteinEntriesByDate
+    val pagerState = rememberPagerState(
+        initialPage = viewModel.last7Days.size - 1,
+        pageCount = { viewModel.last7Days.size }
+    )
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -53,6 +58,10 @@ fun DashboardScreen(
                 duration = SnackbarDuration.Long
             )
         }
+    }
+
+    LaunchedEffect(pagerState.currentPage) {
+        viewModel.selectedDate = viewModel.last7Days[pagerState.currentPage]
     }
 
     Scaffold(
@@ -112,9 +121,10 @@ fun DashboardScreen(
             )
             Spacer(modifier = Modifier.padding(8.dp))
             ProteinDayPager(
+                pagerState = pagerState,
                 dailyEntriesByDate = dailyEntriesByDate,
                 last7Days = viewModel.last7Days,
-                onDismiss = { entry -> viewModel.removeProteinEntry(entry) }
+                onDismiss = { entry -> viewModel.removeProteinEntry(entry) },
             )
         }
     }

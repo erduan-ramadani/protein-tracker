@@ -1,7 +1,6 @@
 package com.ercoding.proteintracker.presentation.dashboard
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,7 +11,6 @@ import com.ercoding.proteintracker.data.remote.AnthropicRepository
 import com.ercoding.proteintracker.domain.ProteinEntry
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -26,7 +24,7 @@ class DashboardViewModel(
     private val prefRepository: PreferencesRepository
 ) : ViewModel() {
 
-    var dailyReached by mutableIntStateOf(0)
+    val dailyReached: Int get() = getDailyReached(selectedDate)
     val dailyGoal = prefRepository.proteinGoal.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
@@ -44,7 +42,8 @@ class DashboardViewModel(
     val last7Days: List<LocalDate> = (0..6).map {
         LocalDate.now().minusDays(it.toLong())
     }.reversed()
-    
+    var selectedDate: LocalDate? by mutableStateOf(LocalDate.now())
+
     var isLoading by mutableStateOf(false)
     val progress: Float
         get() =
@@ -56,10 +55,14 @@ class DashboardViewModel(
 
     init {
         viewModelScope.launch {
-            dailyReached = prefRepository.dailyReached.first() ?: 0
             proteinEntries.addAll(prefRepository.getProteinEntries())
             proteinEntries.addAll(
                 listOf(
+                    ProteinEntry(
+                        meal = "Test vorgestern",
+                        proteinAmount = 30,
+                        createdAt = System.currentTimeMillis() - 166400000
+                    ),
                     ProteinEntry(
                         meal = "Test gestern",
                         proteinAmount = 30,
@@ -83,7 +86,6 @@ class DashboardViewModel(
                 _events.send("Unbekannter Fehler")
             }
             result.onSuccess { proteinAmount ->
-                dailyReached += proteinAmount
                 proteinEntries += ProteinEntry(
                     UUID.randomUUID().toString(),
                     query,
@@ -98,9 +100,7 @@ class DashboardViewModel(
 
     fun reset() {
         viewModelScope.launch {
-            dailyReached = 0
             prefRepository.setDailyReached(dailyReached)
-
             proteinEntries.clear()
             prefRepository.setProteinEntries(proteinEntries)
         }
@@ -108,11 +108,14 @@ class DashboardViewModel(
 
     fun removeProteinEntry(entry: ProteinEntry) {
         viewModelScope.launch {
-            dailyReached -= entry.proteinAmount
             prefRepository.setDailyReached(dailyReached)
 
             proteinEntries.removeIf { it.id == entry.id }
             prefRepository.setProteinEntries(proteinEntries)
         }
+    }
+
+    fun getDailyReached(date: LocalDate?): Int {
+        return proteinEntriesByDate[date]?.sumOf { it.proteinAmount } ?: 0
     }
 }

@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,16 +20,12 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun ProteinDayPager(
+    pagerState: PagerState,
     dailyEntriesByDate: Map<LocalDate, List<ProteinEntry>>,
     last7Days: List<LocalDate>,
     onDismiss: (ProteinEntry) -> Unit
 ) {
     val listState = rememberLazyListState()
-    val pagerState = rememberPagerState(
-        initialPage = last7Days.size - 1,
-        pageCount = { last7Days.size }
-    )
-
 
     HorizontalPager(pagerState) { page ->
         Column(
