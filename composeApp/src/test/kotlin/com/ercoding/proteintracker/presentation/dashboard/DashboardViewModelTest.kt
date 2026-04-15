@@ -16,15 +16,12 @@ import org.junit.Before
 import org.junit.Test
 
 class DashboardViewModelTest {
-
-    private val fakeAnthropicRepo = FakeAnthropicRepository()
     private val fakePreferencesRepo = FakePreferencesRepository()
     private lateinit var viewModel: DashboardViewModel
 
     @Before
     fun setup() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        viewModel = DashboardViewModel(fakeAnthropicRepo, fakePreferencesRepo)
     }
 
     @After
@@ -32,16 +29,37 @@ class DashboardViewModelTest {
         Dispatchers.resetMain()
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun addProteins_increases_dailyReached() = runTest {
-        // Arrange: dailyReached startet bei 0, FakeRepo gibt immer 3 zurück
+        // Arrange: dailyReached startet bei 0, FakeRepo gibt immer 35 zurück
         // Act — Aktion ausführen
+        viewModel = DashboardViewModel(
+            FakeAnthropicRepository(35), fakePreferencesRepo
+        )
         viewModel.addProteins("100g hähnchen")
         advanceUntilIdle()
-        println("dailyReached: ${viewModel.dailyReached}")
-        println("entries: ${viewModel.proteinEntries}")
         // Assert — Ergebnis prüfen
         assert(viewModel.dailyReached == 35)
+    }
+
+    @Test
+    fun addProteins_withZeroProtein_doesNotAddEntry() = runTest {
+        viewModel = DashboardViewModel(
+            FakeAnthropicRepository(0), fakePreferencesRepo
+        )
+        viewModel.addProteins("asdfg")
+        advanceUntilIdle()
+        assert(viewModel.proteinEntries.isEmpty())
+    }
+
+    @Test
+    fun reset_clearsDailyReachedAndEntries() = runTest {
+        viewModel = DashboardViewModel(
+            FakeAnthropicRepository(35), fakePreferencesRepo
+        )
+        viewModel.addProteins("100g hähnchen")
+        advanceUntilIdle()
+        viewModel.reset()
+        assert(viewModel.proteinEntries.isEmpty() && viewModel.dailyReached == 0)
     }
 }
