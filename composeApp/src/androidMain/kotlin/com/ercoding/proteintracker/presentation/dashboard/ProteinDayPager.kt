@@ -12,7 +12,6 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ercoding.proteintracker.domain.ProteinEntry
@@ -31,7 +30,6 @@ fun ProteinDayPager(
     HorizontalPager(pagerState) { page ->
         Column(
             modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val dateKey = last7Days[page]
             val today = LocalDate.now()
@@ -41,8 +39,11 @@ fun ProteinDayPager(
                 yesterday -> "Gestern"
                 else -> dateKey.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
             }
-            Spacer(modifier = Modifier.padding(8.dp))
-            Text(text = dateLabel, style = MaterialTheme.typography.titleMedium)
+            Spacer(modifier = Modifier.padding(3.dp))
+            Text(
+                text = dateLabel,
+                style = MaterialTheme.typography.titleMedium
+            )
 
             if (last7Days.isEmpty()) {
                 // leere Ansicht anzeigen
