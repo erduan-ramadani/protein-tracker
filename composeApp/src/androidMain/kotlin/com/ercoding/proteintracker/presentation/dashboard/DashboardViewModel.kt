@@ -8,8 +8,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ercoding.proteintracker.data.local.PreferencesRepository
-import com.ercoding.proteintracker.data.remote.AnthropicRepository
+import com.ercoding.proteintracker.domain.AnthropicInterface
+import com.ercoding.proteintracker.domain.PreferencesInterface
 import com.ercoding.proteintracker.domain.ProteinEntry
 import io.ktor.client.plugins.HttpRequestTimeoutException
 import kotlinx.coroutines.channels.Channel
@@ -25,8 +25,8 @@ import java.util.UUID
 
 @RequiresApi(Build.VERSION_CODES.O)
 class DashboardViewModel(
-    private val anthropicRepo: AnthropicRepository,
-    private val prefRepository: PreferencesRepository
+    private val anthropicRepo: AnthropicInterface,
+    private val prefRepository: PreferencesInterface
 ) : ViewModel() {
 
     val dailyReached: Int get() = getDailyReached(selectedDate)
@@ -63,25 +63,25 @@ class DashboardViewModel(
     init {
         viewModelScope.launch {
             proteinEntries.addAll(prefRepository.getProteinEntries())
-            proteinEntries.addAll(
-                listOf(
-                    ProteinEntry(
-                        meal = "Test vorgestern",
-                        proteinAmount = 30,
-                        createdAt = System.currentTimeMillis() - 166400000
-                    ),
-                    ProteinEntry(
-                        meal = "Test gestern",
-                        proteinAmount = 75,
-                        createdAt = System.currentTimeMillis() - 86400000
-                    ),
-                    ProteinEntry(
-                        meal = "Test heute",
-                        proteinAmount = 50,
-                        createdAt = System.currentTimeMillis()
-                    )
-                )
-            )
+//            proteinEntries.addAll(
+//                listOf(
+//                    ProteinEntry(
+//                        meal = "Test vorgestern",
+//                        proteinAmount = 30,
+//                        createdAt = System.currentTimeMillis() - 166400000
+//                    ),
+//                    ProteinEntry(
+//                        meal = "Test gestern",
+//                        proteinAmount = 75,
+//                        createdAt = System.currentTimeMillis() - 86400000
+//                    ),
+//                    ProteinEntry(
+//                        meal = "Test heute",
+//                        proteinAmount = 50,
+//                        createdAt = System.currentTimeMillis()
+//                    )
+//                )
+//            )
         }
     }
 
