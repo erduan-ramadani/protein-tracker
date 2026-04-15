@@ -1,6 +1,9 @@
 package com.ercoding.proteintracker.presentation.dashboard
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
@@ -106,12 +110,15 @@ fun DashboardScreen(
                 .padding(16.dp, 0.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(70.dp),
-                progress = { progress }
-            )
+            Box(contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(120.dp),
+                    progress = { progress }
+                )
+                Text(text = "${(progress * 100).toInt()}%")
+            }
             Spacer(modifier = Modifier.padding(8.dp))
-            Text(text = "Tageswert: $dailyReached / ${dailyGoal.value}")
+            Text(text = "Tageswert: ${dailyReached}g / ${dailyGoal.value}g")
             Spacer(modifier = Modifier.padding(8.dp))
             ProteinInputSection(
                 onClick = { query ->

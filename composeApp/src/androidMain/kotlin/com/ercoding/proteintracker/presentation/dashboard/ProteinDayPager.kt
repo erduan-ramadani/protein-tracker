@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,7 +42,7 @@ fun ProteinDayPager(
                 else -> dateKey.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
             }
             Spacer(modifier = Modifier.padding(8.dp))
-            Text(text = dateLabel)
+            Text(text = dateLabel, style = MaterialTheme.typography.titleMedium)
 
             if (last7Days.isEmpty()) {
                 // leere Ansicht anzeigen
