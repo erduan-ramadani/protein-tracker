@@ -3,13 +3,13 @@ package com.ercoding.proteintracker.presentation
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ercoding.proteintracker.data.local.PreferencesRepository
+import com.ercoding.proteintracker.domain.PreferencesInterface
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class MainViewModel(prefRepo: PreferencesRepository) : ViewModel() {
+class MainViewModel(prefRepo: PreferencesInterface) : ViewModel() {
 
     val isDarkMode =
         prefRepo.darkMode.stateIn(

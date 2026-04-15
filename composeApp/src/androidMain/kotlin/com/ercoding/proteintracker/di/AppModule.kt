@@ -1,11 +1,15 @@
 package com.ercoding.proteintracker.di
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.ercoding.proteintracker.data.local.PreferencesRepository
 import com.ercoding.proteintracker.data.remote.AnthropicRepository
+import com.ercoding.proteintracker.domain.AnthropicInterface
+import com.ercoding.proteintracker.domain.PreferencesInterface
 import com.ercoding.proteintracker.presentation.MainViewModel
 import com.ercoding.proteintracker.presentation.dashboard.DashboardViewModel
 import com.ercoding.proteintracker.presentation.onboarding.OnboardingViewModel
@@ -21,10 +25,11 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 val appModule = module {
     single { CoroutineScope(SupervisorJob() + Dispatchers.Default) }
     single { androidContext().dataStore }
-    single { PreferencesRepository(get()) }
-    single { AnthropicRepository() }
+    single<PreferencesInterface> { PreferencesRepository(get()) }
+    single<AnthropicInterface> { AnthropicRepository() }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 val viewModelModule = module {
     viewModel { MainViewModel(get()) }
     viewModel { DashboardViewModel(get(), get()) }

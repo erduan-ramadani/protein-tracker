@@ -2,12 +2,12 @@ package com.ercoding.proteintracker.presentation.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ercoding.proteintracker.data.local.PreferencesRepository
+import com.ercoding.proteintracker.domain.PreferencesInterface
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class SettingsViewModel(private val prefRepo: PreferencesRepository) : ViewModel() {
+class SettingsViewModel(private val prefRepo: PreferencesInterface) : ViewModel() {
 
     val proteinGoal: Flow<Int?> = prefRepo.proteinGoal
     val isDarkMode: Flow<Boolean> = prefRepo.darkMode
