@@ -109,7 +109,7 @@ fun SettingsScreen(
                     shape = RoundedCornerShape(20.dp),
                     modifier = Modifier
                         .weight(0.6f)
-                        .padding(horizontal = 16.dp)
+                        .padding(horizontal = 8.dp)
                         .fillMaxHeight()
                         .onFocusChanged { focusState ->
                             if (focusState.isFocused) newDailyGoal = ""
@@ -122,7 +122,7 @@ fun SettingsScreen(
                     shape = RoundedCornerShape(20.dp),
                     modifier = Modifier
                         .weight(0.4f)
-                        .padding(horizontal = 16.dp)
+                        .padding(horizontal = 8.dp)
                         .fillMaxHeight()
                 ) {
                     Text("Speichern")
