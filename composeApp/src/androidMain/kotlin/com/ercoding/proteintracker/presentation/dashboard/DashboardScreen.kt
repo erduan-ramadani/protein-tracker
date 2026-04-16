@@ -126,7 +126,7 @@ fun DashboardScreen(
         ) {
             Box(contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(
-                    strokeWidth = 12.dp,
+                    strokeWidth = 8.dp,
                     modifier = Modifier.size(120.dp),
                     progress = { progress }
                 )
