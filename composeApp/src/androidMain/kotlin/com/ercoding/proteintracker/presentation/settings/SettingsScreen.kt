@@ -1,9 +1,14 @@
 package com.ercoding.proteintracker.presentation.settings
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -92,26 +97,36 @@ fun SettingsScreen(
                     containerColor = MaterialTheme.colorScheme.background
                 )
             )
-            OutlinedTextField(
-                value = newDailyGoal,
-                placeholder = { Text(dailyGoal) },
-                onValueChange = { newDailyGoal = it },
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .onFocusChanged { focusState ->
-                        if (focusState.isFocused) newDailyGoal = ""
-                    }
-            )
-            Button(
-                onClick = {
-                    viewModel.setProteinGoal(newDailyGoal.toInt())
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .height(IntrinsicSize.Min)
             ) {
-                Text("Speichern")
+                OutlinedTextField(
+                    value = newDailyGoal,
+                    placeholder = { Text(dailyGoal) },
+                    onValueChange = { newDailyGoal = it },
+                    shape = RoundedCornerShape(20.dp),
+                    modifier = Modifier
+                        .weight(0.6f)
+                        .padding(horizontal = 16.dp)
+                        .fillMaxHeight()
+                        .onFocusChanged { focusState ->
+                            if (focusState.isFocused) newDailyGoal = ""
+                        }
+                )
+                Button(
+                    onClick = {
+                        viewModel.setProteinGoal(newDailyGoal.toInt())
+                    },
+                    shape = RoundedCornerShape(20.dp),
+                    modifier = Modifier
+                        .weight(0.4f)
+                        .padding(horizontal = 16.dp)
+                        .fillMaxHeight()
+                ) {
+                    Text("Speichern")
+                }
             }
         }
     }
