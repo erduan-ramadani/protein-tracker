@@ -127,20 +127,15 @@ fun DashboardScreen(
             Box(contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(
                     strokeWidth = 8.dp,
-                    modifier = Modifier.size(120.dp),
+                    modifier = Modifier.size(80.dp),
                     progress = { progress }
                 )
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         text = "${viewModel.getProgress(progress)}%",
                         color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.headlineMedium,
+                        style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "von Tagesziel",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        style = MaterialTheme.typography.bodySmall
                     )
                 }
             }

@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -109,9 +108,7 @@ fun ProteinInputSection(
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 } else {
-                    IconButton(onClick = { }) {
-                        Icon(Icons.Default.Add, contentDescription = "Add")
-                    }
+                    Icon(Icons.Default.Add, contentDescription = "Add")
                 }
             }
         }
