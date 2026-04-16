@@ -3,8 +3,10 @@ package com.ercoding.proteintracker.presentation.dashboard
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,8 +16,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -53,7 +59,11 @@ fun ProteinInputSection(
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.padding(2.dp))
-        Row(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)
+        ) {
             OutlinedTextField(
                 value = userTextInput,
                 onValueChange = { userTextInput = it },
@@ -65,7 +75,8 @@ fun ProteinInputSection(
                     focusedContainerColor = MaterialTheme.colorScheme.surface
                 ),
                 modifier = Modifier
-                    .height(56.dp),
+                    .weight(0.80f)
+                    .fillMaxHeight(),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(
                     onDone = {
@@ -86,20 +97,21 @@ fun ProteinInputSection(
 //                enabled = userTextInput.isNotBlank()
 //                        && userTextInput.length >= 3
 //                        && userTextInput.length < 40,
-                modifier = Modifier.height(56.dp),
-                shape = RoundedCornerShape(20.dp)
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(0.2f),
+                shape = RoundedCornerShape(20.dp),
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier
+                            .size(24.dp),
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 } else {
-                    Text(
-                        text = "+ Add",
-                        color = MaterialTheme.colorScheme.onSecondary,
-                        style = MaterialTheme.typography.titleMedium,
-                    )
+                    IconButton(onClick = { }) {
+                        Icon(Icons.Default.Add, contentDescription = "Add")
+                    }
                 }
             }
         }

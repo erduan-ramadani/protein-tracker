@@ -57,9 +57,9 @@ fun ProteinEntryItem(
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(4.dp)
         ) {
-            Row(modifier = Modifier.padding(16.dp)) {
+            Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)) {
                 Box(
                     modifier = Modifier
                         .size(40.dp)
@@ -68,8 +68,8 @@ fun ProteinEntryItem(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "🥚",
-                        fontSize = 16.sp
+                        text = entry.emoji,
+                        fontSize = 18.sp
                     )
                 }
                 Spacer(modifier = Modifier.width(8.dp))

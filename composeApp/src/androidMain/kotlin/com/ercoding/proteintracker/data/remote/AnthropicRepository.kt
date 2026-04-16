@@ -21,10 +21,9 @@ class AnthropicRepository : AnthropicInterface {
         }
     }
 
-    override suspend fun requestProteinAmount(query: String): Result<Int> {
-        val anthropicQuery =
-            "Wie viel Gramm Eiweiß enthält folgende Mahlzeit: $query. Wenn die Menge unklar ist, schätze eine typische Portion. Antworte nur mit einer ganzen Zahl, ohne Einheit oder Erklärung."
-
+    override suspend fun requestProteinAmount(query: String): Result<String> {
+        val anthropicQueryWithEmoji =
+            "Wie viel Gramm Eiweiß enthält folgende Mahlzeit: $query. Wenn die Menge unklar ist, schätze eine typische Portion. Antworte nur mit einer ganzen Zahl in Gramm und einem passenden Emoji getrennt durch |. Beispiel: 31|\uD83C\uDF57"
         return runCatching {
             client.post(BuildConfig.BASE_URL) {
                 contentType(ContentType.Application.Json)
@@ -37,13 +36,13 @@ class AnthropicRepository : AnthropicInterface {
                         messages = listOf(
                             Message(
                                 role = "user",
-                                content = anthropicQuery
+                                content = anthropicQueryWithEmoji
                             )
                         )
                     )
                 )
             }.body<MessageResponse>()
-                .content.firstOrNull()?.text?.toIntOrNull() ?: 0
+                .content.firstOrNull()?.text ?: ""
         }
     }
 }

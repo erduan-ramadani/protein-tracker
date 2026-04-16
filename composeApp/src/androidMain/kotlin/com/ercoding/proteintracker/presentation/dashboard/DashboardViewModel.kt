@@ -97,14 +97,19 @@ class DashboardViewModel(
                 }
                 _events.send(errorMessage)
             }
-            result.onSuccess { proteinAmount ->
+            result.onSuccess { response ->
+                println("Antwort: $response")
+                val parts = response.split("|")
+                val proteinAmount = parts[0].toIntOrNull() ?: 0
+                val emoji = parts.getOrNull(1) ?: "🍽️"
                 if (proteinAmount == 0) {
                     _events.send("Proteingehalt nicht gefunden")
                 } else {
                     proteinEntries += ProteinEntry(
                         UUID.randomUUID().toString(),
                         query,
-                        proteinAmount
+                        proteinAmount,
+                        emoji
                     )
                     prefRepository.setDailyReached(dailyReached)
                     prefRepository.setProteinEntries(proteinEntries)
