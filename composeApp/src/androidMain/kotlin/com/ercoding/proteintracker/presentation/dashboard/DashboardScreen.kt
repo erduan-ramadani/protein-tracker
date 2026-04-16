@@ -23,7 +23,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -115,18 +114,7 @@ fun DashboardScreen(
                 }
             )
         },
-        bottomBar = {
-            OutlinedButton(
-                onClick = {
-                    viewModel.reset()
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-            ) {
-                Text("Zurücksetzen")
-            }
-        }
+        bottomBar = {}
     ) { paddingValues ->
 
         Column(
@@ -144,7 +132,7 @@ fun DashboardScreen(
                 )
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "${(progress * 100).toInt()}%",
+                        text = "${viewModel.getProgress(progress)}%",
                         color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold
@@ -223,13 +211,16 @@ fun DashboardScreen(
                             .padding(vertical = 8.dp),
                     ) {
                         Text(
-                            text = "${(dailyGoal.value ?: 0) - dailyReached}g",
+                            text =
+                                if (viewModel.getDailyProteinAmountRemaining() == 0) "🎉"
+                                else "${viewModel.getDailyProteinAmountRemaining()}g",
                             color = Color(0xFF009604),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "übrig",
+                            if (viewModel.getDailyProteinAmountRemaining() != 0) "übrig"
+                            else "Ziel erreicht",
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             style = MaterialTheme.typography.bodyMedium
 
@@ -251,8 +242,12 @@ fun DashboardScreen(
                             .padding(vertical = 8.dp),
                     ) {
                         Text(
-                            text = "${viewModel.proteinEntries.size}",
-                            color = Color(0xFFFF5722),
+                            text = "${
+                                viewModel.getEntryAmountOfDay(
+                                    viewModel.last7Days[pagerState.currentPage]
+                                )
+                            }",
+                            color = Color(0xFFFF7E19),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )

@@ -135,4 +135,22 @@ class DashboardViewModel(
     fun getDailyReached(date: LocalDate?): Int {
         return proteinEntriesByDate[date]?.sumOf { it.proteinAmount } ?: 0
     }
+
+    fun getProgress(progress: Float): Int {
+        val percentage: Int = (progress * 100).toInt()
+        return if (percentage >= 100) 100
+        else percentage
+
+    }
+
+    fun getDailyProteinAmountRemaining(): Int? {
+        val remaining = dailyGoal.value?.minus(dailyReached)
+        return if (remaining == null || remaining <= 0) 0
+        else remaining
+    }
+
+    fun getEntryAmountOfDay(date: LocalDate): Int {
+        val currentEntriesCount = proteinEntriesByDate[date]?.size ?: 0
+        return currentEntriesCount
+    }
 }
