@@ -63,25 +63,6 @@ class DashboardViewModel(
     init {
         viewModelScope.launch {
             proteinEntries.addAll(prefRepository.getProteinEntries())
-//            proteinEntries.addAll(
-//                listOf(
-//                    ProteinEntry(
-//                        meal = "Test vorgestern",
-//                        proteinAmount = 30,
-//                        createdAt = System.currentTimeMillis() - 166400000
-//                    ),
-//                    ProteinEntry(
-//                        meal = "Test gestern",
-//                        proteinAmount = 75,
-//                        createdAt = System.currentTimeMillis() - 86400000
-//                    ),
-//                    ProteinEntry(
-//                        meal = "Test heute",
-//                        proteinAmount = 50,
-//                        createdAt = System.currentTimeMillis()
-//                    )
-//                )
-//            )
         }
     }
 
@@ -105,11 +86,16 @@ class DashboardViewModel(
                 if (proteinAmount == 0) {
                     _events.send("Proteingehalt nicht gefunden")
                 } else {
+                    val createdAt = selectedDate?.atStartOfDay(ZoneId.systemDefault())?.toInstant()
+                        ?.toEpochMilli()
+                        ?: System.currentTimeMillis()
+
                     proteinEntries += ProteinEntry(
                         UUID.randomUUID().toString(),
                         query,
                         proteinAmount,
-                        emoji
+                        emoji,
+                        createdAt
                     )
                     prefRepository.setDailyReached(dailyReached)
                     prefRepository.setProteinEntries(proteinEntries)
