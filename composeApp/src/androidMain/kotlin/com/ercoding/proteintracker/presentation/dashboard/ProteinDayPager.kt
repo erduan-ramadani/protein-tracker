@@ -39,8 +39,6 @@ fun ProteinDayPager(
     last7Days: List<LocalDate>,
     onDismiss: (ProteinEntry) -> Unit
 ) {
-    val listState = rememberLazyListState()
-
     HorizontalPager(pagerState) { page ->
 
         Column(
@@ -86,6 +84,7 @@ fun ProteinDayPager(
                 // leere Ansicht anzeigen
             } else {
                 val entriesForDay = dailyEntriesByDate[dateKey] ?: emptyList()
+                val listState = rememberLazyListState()
                 LazyColumn(
                     state = listState,
                 ) {

@@ -134,7 +134,7 @@ fun DashboardScreen(
                     Text(
                         text = "${viewModel.getProgress(progress)}%",
                         color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.headlineSmall,
+                        style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
                 }
