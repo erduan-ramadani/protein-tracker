@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -7,6 +6,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.google.services)
 }
 
 kotlin {
@@ -39,6 +39,10 @@ kotlin {
             implementation(libs.koin.androidx.compose)
 
             implementation(libs.ktor.client.okhttp)
+
+            implementation(project.dependencies.platform(libs.firebase.bom))
+            implementation(libs.firebase.config)
+
         }
         commonMain.dependencies {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
@@ -79,16 +83,9 @@ kotlin {
     }
 }
 
-val localProperties = Properties()
-localProperties.load(rootProject.file("local.properties").inputStream())
-val apiKey = localProperties["API_KEY"] as String
-val baseUrl = localProperties["BASE_URL"] as String
-
 android {
     namespace = "com.ercoding.proteintracker"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
-
-    buildFeatures { buildConfig = true }
 
     defaultConfig {
         applicationId = "com.ercoding.proteintracker"
@@ -96,9 +93,6 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
-
-        buildConfigField("String", "API_KEY", "\"$apiKey\"")
-        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
     }
     packaging {
         resources {

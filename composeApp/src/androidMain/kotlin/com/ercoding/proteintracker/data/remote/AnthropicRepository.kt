@@ -1,6 +1,5 @@
 package com.ercoding.proteintracker.data.remote
 
-import com.ercoding.proteintracker.BuildConfig
 import com.ercoding.proteintracker.domain.AnthropicInterface
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -13,7 +12,9 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-class AnthropicRepository : AnthropicInterface {
+class AnthropicRepository(
+    private val firebaseRepository: FirebaseRepository
+) : AnthropicInterface {
 
     private val client = HttpClient {
         install(ContentNegotiation) {
@@ -22,12 +23,13 @@ class AnthropicRepository : AnthropicInterface {
     }
 
     override suspend fun requestProteinAmount(query: String): Result<String> {
+        val key = firebaseRepository.fetchAnthropicApiKey()
         val anthropicQueryWithEmoji =
             "Wie viel Gramm Eiweiß enthält folgende Mahlzeit: $query. Wenn die Menge unklar ist, schätze eine typische Portion. Antworte nur mit einer ganzen Zahl in Gramm und einem passenden Emoji getrennt durch |. Beispiel: 31|\uD83C\uDF57"
         return runCatching {
-            client.post(BuildConfig.BASE_URL) {
+            client.post("https://api.anthropic.com/v1/messages") {
                 contentType(ContentType.Application.Json)
-                header("x-api-key", BuildConfig.API_KEY)
+                header("x-api-key", key)
                 header("anthropic-version", "2023-06-01")
                 setBody(
                     MessageRequest(

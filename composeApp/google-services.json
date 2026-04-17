@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "70583307462",
+    "project_id": "protein-track-ea9af",
+    "storage_bucket": "protein-track-ea9af.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:70583307462:android:a45cf6ad813bdcf4e31bc7",
+        "android_client_info": {
+          "package_name": "com.ercoding.proteintracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAl7cQ2gPgOS21m0Im0SHlrU91axnb7Q_A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

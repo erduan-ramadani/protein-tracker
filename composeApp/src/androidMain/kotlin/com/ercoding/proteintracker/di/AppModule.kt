@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.ercoding.proteintracker.data.local.PreferencesRepository
 import com.ercoding.proteintracker.data.remote.AnthropicRepository
+import com.ercoding.proteintracker.data.remote.FirebaseRepository
 import com.ercoding.proteintracker.domain.AnthropicInterface
 import com.ercoding.proteintracker.domain.PreferencesInterface
 import com.ercoding.proteintracker.presentation.MainViewModel
@@ -26,7 +27,8 @@ val appModule = module {
     single { CoroutineScope(SupervisorJob() + Dispatchers.Default) }
     single { androidContext().dataStore }
     single<PreferencesInterface> { PreferencesRepository(get()) }
-    single<AnthropicInterface> { AnthropicRepository() }
+    single { FirebaseRepository() }
+    single<AnthropicInterface> { AnthropicRepository(get()) }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
